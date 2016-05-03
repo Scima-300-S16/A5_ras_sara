@@ -70,7 +70,15 @@ void draw() {
 
   drawTitleTabs();
   drawAxisLabels();
-
+  
+  stroke(#5679C1);
+  strokeWeight(5);
+  drawDataPoints(currentColumn);
+  noFill();
+  strokeWeight(0.5);
+  drawDataLine(currentColumn);  
+  
+  
   for (int row = 0; row<rowCount; row++) {
     interpolators[row].update();
   }
@@ -80,7 +88,7 @@ void draw() {
 
   noStroke();
   fill(#5679C1);
-  drawDataArea(currentColumn);
+  //drawDataArea(currentColumn);
 }
 
 void drawTitleTabs() {
@@ -186,7 +194,32 @@ void drawVolumeLabels() {
     }
   }
 }
-void drawDataArea(int col) {
+
+void drawDataPoints(int col) {
+  for (int row = 0; row < rowCount; row++) {
+    if (data.isValid(row, col)) {
+      float value = data.getFloat(row, col);
+      float x = map(years[row], yearMin, yearMax, plotX1, plotX2);
+      float y = map(value, dataMin, dataMax, plotY2, plotY1);
+      point(x, y);
+    }
+  }
+}
+
+void drawDataLine(int col) {  
+  beginShape();
+  for (int row = 0; row < rowCount; row++) {
+    if (data.isValid(row, col)) {
+      float value = data.getFloat(row, col);
+      float x = map(years[row], yearMin, yearMax, plotX1, plotX2);
+      float y = map(value, dataMin, dataMax, plotY2, plotY1);      
+      vertex(x, y);
+    }
+  }
+  endShape();
+}
+
+/*void drawDataArea(int col) {
   beginShape();
   for (int row=0; row<rowCount; row++) {
     if (data.isValid(row, col)) {
@@ -200,3 +233,4 @@ void drawDataArea(int col) {
   vertex(plotX1, plotY2);
   endShape(CLOSE);
 }
+*/
